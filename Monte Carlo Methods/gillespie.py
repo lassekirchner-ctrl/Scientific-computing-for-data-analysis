@@ -120,6 +120,8 @@ exc1()
 
 
 ## exc 2
+#prop tells model how liekly an event is right now. Takes SEIR 
+#
 def prop(X, coeff):
     """Propensities, in the same order as the rows of stoch()."""
     S, E, I, R = X
@@ -128,14 +130,18 @@ def prop(X, coeff):
                      alpha * E,          # E -> I  (becomes infectious)
                      gamma * I])         # I -> R  (recovery)
  
- 
+#stoch is the stochimetry matrix, one row per reaction 
+# and one coolumn per compartment (SEIR)
+#each row says how the state changes when that reaction happens!
 def stoch():
     """Stoichiometry matrix: one row per reaction, one column per state (S,E,I,R)."""
     return np.array([[-1,  1,  0, 0],
                      [ 0, -1,  1, 0],
                      [ 0,  0, -1, 1]])
  
- 
+
+
+#SSA calls stoch once and prop each timestep
 def exc2():
     N, I0 = 100, 2
     beta, alpha, gamma = 0.6, 1/5, 1/10
@@ -146,7 +152,8 @@ def exc2():
     # ODE reference from task 1
     sol = simulate_ode(beta, alpha, gamma, N, I0, T=tspan[1])
  
-    # One SSA run
+    # Run SSA once 
+    #diffrent runs can result in slighty diffrent results since metho is stochastic
     tvec, Xarr = SSA(prop, stoch, X0, tspan, coeff)
  
     fig, axs = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
@@ -165,9 +172,3 @@ def exc2():
     plt.show()
 
 #exc2()
-#SSA(prop, stoch, X0, tspan, coeff):
-# prop  - propensities, a function
-# stoch - stoichiometry vector, a function
-# X0 - Initial state vector
-
-
