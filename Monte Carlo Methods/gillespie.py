@@ -8,6 +8,8 @@
 #==================================
 import numpy as np
 import random
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
 
 def SSA(prop, stoch, X0, tspan, coeff):
     # prop  - propensities, a function
@@ -54,9 +56,6 @@ def SSA(prop, stoch, X0, tspan, coeff):
     return tvec, Xarr
 
 ##own code
-
-
-
 def seir_rhs(t, y, beta, alpha, gamma, N):
     S, E, I, R = y
     infection = beta * I * S / N
@@ -120,17 +119,11 @@ exc1()
 ### end exc 1
 
 
+## exc 2
+SSA()
+#SSA(prop, stoch, X0, tspan, coeff):
+# prop  - propensities, a function
+# stoch - stoichiometry vector, a function
+# X0 - Initial state vector
 
-
-
-def hora():
-   return print(hora)
-
-hora
-
-
-
-
-def testikel():
-    pass
 
