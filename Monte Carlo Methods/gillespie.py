@@ -172,6 +172,8 @@ def exc2():
     plt.show()
 
 #exc2()
+
+
 def exc3():
     N, I0 = 100, 2
     beta, alpha, gamma = 0.6, 1/5, 1/10
