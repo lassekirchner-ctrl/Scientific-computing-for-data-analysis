@@ -119,11 +119,11 @@ exc1()
 ### end exc 1
 
 
+## exc 2
+SSA()
+#SSA(prop, stoch, X0, tspan, coeff):
+# prop  - propensities, a function
+# stoch - stoichiometry vector, a function
+# X0 - Initial state vector
 
 
-
-
-
-
-def testikel():
-    pass
