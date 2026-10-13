@@ -223,4 +223,12 @@ def exc4(num_sims=500, threshold=40):
     print(f"Estimated Probability: {probability:.1%}")
     return probability
 
-exc4(5000)
+#exc4(5000)
+
+def run_all():
+    exc1()
+    exc2()
+    exc3()
+    exc4()
+
+run_all()
