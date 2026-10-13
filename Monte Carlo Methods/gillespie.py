@@ -172,6 +172,8 @@ def exc2():
     plt.show()
 
 #exc2()
+
+###exc 3
 def exc3():
     N, I0 = 100, 2
     beta, alpha, gamma = 0.6, 1/5, 1/10
@@ -197,4 +199,28 @@ def exc3():
     plt.tight_layout()
     plt.show()
 
-exc3()
+#exc3()
+
+### exc 4
+
+def exc4(num_sims=500, threshold=40):
+    N, I0 = 100, 2
+    beta, alpha, gamma = 0.6, 1/5, 1/10
+    coeff = (beta, alpha, gamma, N)
+    X0 = np.array([N - I0, 0, I0, 0])
+    tspan = (0, 60)
+
+    exceeded_count = 0
+
+    for _ in range(num_sims):
+        _, Xarr = SSA(prop, stoch, X0, tspan, coeff)
+        if np.max(Xarr[:, 2]) >= threshold:
+            exceeded_count += 1
+
+    probability = exceeded_count / num_sims
+    print(f"Simulations: {num_sims}")
+    print(f"Runs reaching ≥ {threshold}% infectious: {exceeded_count}")
+    print(f"Estimated Probability: {probability:.1%}")
+    return probability
+
+exc4(5000)
