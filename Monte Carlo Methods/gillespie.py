@@ -123,15 +123,8 @@ exc1()
 
 
 
+def pung():
+    pass
 
-
-def hora():
-   return print(hora)
-
-hora
-
-
-
-
-def testikel():
+def horfitt():
     pass
