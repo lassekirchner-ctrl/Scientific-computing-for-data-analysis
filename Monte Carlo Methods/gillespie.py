@@ -114,7 +114,7 @@ def exc1():
     plt.show()
 
 
-exc1()
+#exc1()
 
 ### end exc 1
 
@@ -172,3 +172,29 @@ def exc2():
     plt.show()
 
 #exc2()
+def exc3():
+    N, I0 = 100, 2
+    beta, alpha, gamma = 0.6, 1/5, 1/10
+    coeff = (beta, alpha, gamma, N)
+    X0 = np.array([N - I0, 0, I0, 0])
+    tspan = (0, 60)
+    num_sims = 30
+
+    sol = simulate_ode(beta, alpha, gamma, N, I0, T=tspan[1])
+    plt.figure(figsize=(10, 6))
+
+    for i in range(num_sims):
+        tvec, Xarr = SSA(prop, stoch, X0, tspan, coeff)
+        plt.step(tvec, Xarr[:, 2], where="post", color="gray", alpha=0.4, label="SSA simultaions" if i == 0 else "")
+
+    plt.plot(sol.t, sol.y[2], color="crimson", linewidth=2.5, label="ODE (Deterministic)")
+
+    plt.xlabel("Time (days)")
+    plt.ylabel("Infectious Individuals ($I$)")
+    plt.title(f"Exercise 3: {num_sims} Stochastic SSA Trajectories vs. Deterministic ODE")
+    plt.legend()
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.show()
+
+exc3()
