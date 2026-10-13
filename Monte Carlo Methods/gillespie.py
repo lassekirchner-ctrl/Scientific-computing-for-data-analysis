@@ -125,6 +125,11 @@ exc1()
 
 
 
+def hora():
+   return print(hora)
+
+hora
+
 
 
 
