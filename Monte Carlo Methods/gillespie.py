@@ -10,6 +10,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
 
 def SSA(prop, stoch, X0, tspan, coeff):
     # prop  - propensities, a function
@@ -182,24 +183,45 @@ def exc3():
     tspan = (0, 60)
     num_sims = 30
 
-    sol = simulate_ode(beta, alpha, gamma, N, I0, T=tspan[1])
+    # 1. Create a time grid to evaluate all simulations
+    t_common = np.linspace(tspan[0], tspan[1], 1000)
+    I_sims = np.zeros((num_sims, len(t_common)))
+
     plt.figure(figsize=(10, 6))
 
+    # 2. Run SSA simulations and interpolate them onto the common time grid
     for i in range(num_sims):
         tvec, Xarr = SSA(prop, stoch, X0, tspan, coeff)
-        plt.step(tvec, Xarr[:, 2], where="post", color="gray", alpha=0.4, label="SSA simultaions" if i == 0 else "")
+        
+        # Use kind='previous' because SSA state remains constant between events (step function)
+        f_interp = interp1d(tvec, Xarr[:, 2], kind='previous', fill_value="extrapolate")
+        I_sims[i, :] = f_interp(t_common)
+        
+        # Plot stochastic runs
+        plt.step(tvec, Xarr[:, 2], where="post", color="gray", alpha=0.25,
+                 label="SSA (Individual runs)" if i == 0 else "")
 
-    plt.plot(sol.t, sol.y[2], color="crimson", linewidth=2.5, label="ODE (Deterministic)")
+    # 3. Calculate the mean for all simulations
+    I_mean = np.mean(I_sims, axis=0)
+
+    # 4. Obtain the deterministic ODE solution
+    sol = simulate_ode(beta, alpha, gamma, N, I0, T=tspan[1])
+
+    # 5. Overlay the mean and the ODE for comparison
+    plt.plot(t_common, I_mean, color="blue", linewidth=2.5, linestyle="--", 
+             label="SSA (Mean)")
+    plt.plot(sol.t, sol.y[2], color="crimson", linewidth=2.5, 
+             label="ODE (Deterministic)")
 
     plt.xlabel("Time (days)")
     plt.ylabel("Infectious Individuals ($I$)")
-    plt.title(f"Exercise 3: {num_sims} Stochastic SSA Trajectories vs. Deterministic ODE")
+    plt.title(f"Exercise 3: Law of Large Numbers Analysis ({num_sims} simulations)")
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
     plt.show()
 
-#exc3()
+
 
 ### exc 4
 
