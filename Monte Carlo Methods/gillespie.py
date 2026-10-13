@@ -100,7 +100,7 @@ def exc1():
 
     # --- Part 2: reduce beta until R0 = 1 ---
     beta_crit = gamma * N / S0       # solves R0 = 1
-    print(f"beta giving R0 = 1: {beta_crit:.4f}")
+    print(f"beta which yeilds R0 = 1 is: beta {beta_crit:.4f}")
 
     plt.figure(figsize=(8, 5))
     for b in [0.6, 0.3, 0.15, beta_crit, 0.08]:
@@ -120,7 +120,51 @@ exc1()
 
 
 ## exc 2
-SSA()
+def prop(X, coeff):
+    """Propensities, in the same order as the rows of stoch()."""
+    S, E, I, R = X
+    beta, alpha, gamma, N = coeff
+    return np.array([beta * S * I / N,   # S -> E  (infection)
+                     alpha * E,          # E -> I  (becomes infectious)
+                     gamma * I])         # I -> R  (recovery)
+ 
+ 
+def stoch():
+    """Stoichiometry matrix: one row per reaction, one column per state (S,E,I,R)."""
+    return np.array([[-1,  1,  0, 0],
+                     [ 0, -1,  1, 0],
+                     [ 0,  0, -1, 1]])
+ 
+ 
+def exc2():
+    N, I0 = 100, 2
+    beta, alpha, gamma = 0.6, 1/5, 1/10
+    coeff = (beta, alpha, gamma, N)
+    X0 = np.array([N - I0, 0, I0, 0])
+    tspan = (0, 60)
+ 
+    # ODE reference from task 1
+    sol = simulate_ode(beta, alpha, gamma, N, I0, T=tspan[1])
+ 
+    # One SSA run
+    tvec, Xarr = SSA(prop, stoch, X0, tspan, coeff)
+ 
+    fig, axs = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
+    names = ["S", "E", "I", "R"]
+    for i, name in enumerate(names):
+        axs[0].plot(sol.t, sol.y[i], label=name)
+        axs[1].step(tvec, Xarr[:, i], where="post", label=name)
+    axs[0].set_title("Deterministic (ODE)")
+    axs[1].set_title("Stochastic (one SSA run)")
+    for ax in axs:
+        ax.set_xlabel("Time (days)")
+        ax.grid(alpha=0.3)
+        ax.legend()
+    axs[0].set_ylabel("Individuals")
+    plt.tight_layout()
+    plt.show()
+
+#exc2()
 #SSA(prop, stoch, X0, tspan, coeff):
 # prop  - propensities, a function
 # stoch - stoichiometry vector, a function
