@@ -175,13 +175,12 @@ def exc2():
 #exc2()
 
 ###exc 3
-def exc3():
-    N, I0 = 100, 2
+def exc3(num_sims = 30, N = 100, I0 = 2): #liten modifikation så man kan skicka input
+    #N, I0 = 100, 2
     beta, alpha, gamma = 0.6, 1/5, 1/10
     coeff = (beta, alpha, gamma, N)
     X0 = np.array([N - I0, 0, I0, 0])
     tspan = (0, 60)
-    num_sims = 30
 
     # 1. Create a time grid to evaluate all simulations
     t_common = np.linspace(tspan[0], tspan[1], 1000)
@@ -253,4 +252,10 @@ def run_all():
     exc3()
     exc4()
 
-run_all()
+#run_all()
+
+#N = number of individuals, K = number of runs
+def run_for_large_N_with_large_K():
+    exc3(5000, 1000, 100) # N, num_sims, I0
+
+#run_for_large_N_with_large_K() ##obs!!! tar minst 10 min att köra! 
