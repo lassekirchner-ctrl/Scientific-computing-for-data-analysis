@@ -256,6 +256,6 @@ def run_all():
 
 #N = number of individuals, K = number of runs
 def run_for_large_N_with_large_K():
-    exc3(1000, 100, 20)
+    exc3(5000, 1000, 100) # N, num_sims, I0
 
-run_for_large_N_with_large_K()
+#run_for_large_N_with_large_K() ##obs!!! tar minst 10 min att köra! 
