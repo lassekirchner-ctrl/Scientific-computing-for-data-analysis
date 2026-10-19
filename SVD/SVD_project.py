@@ -26,16 +26,16 @@ def plot_singular_images (d: int): #d is the digit
 def plot_singular_values(d):
     Sd = get_svd(d)[1]
     plt.figure()
-    plt.plot(Sd)
+    plt.plot(Sd, marker='o', markersize=4, linestyle='-')
     plt.title(f'Singular Values for Digit {d}')
     plt.xlabel('Index')
     plt.ylabel('Singular Value')
     plt.grid(True)
-    plt.show()  
+    plt.show()
 
-""" print(plot_singular_values(3))
-print(plot_singular_values(8))
- """
+plot_singular_values(3)
+plot_singular_values(8)
+
 ### To Do 2
 TestMat = np.load('TestDigits.npy')
 TestLab = np.load('TestLabels.npy')
