@@ -425,3 +425,266 @@ def Q9_2024(N):
     return totals.mean(), total_total
 
 #print(Q9_2024(10**4))
+
+##3xam 2025 january
+
+def Q5_2025():
+    resA = 0.05*100/1.96
+    print(resA)
+
+    m = (1.96*resA/0.025)**2
+    print(m)
+
+#Q5_2025()
+
+
+def Q6_2025():
+    root2 = math.sqrt(2)
+    U = np.array([[1/root2, -1/root2, 0, 0],
+                  [0, 0, 0, 1],
+                  [0, 0, -1, 0],
+                  [1/root2, 1/root2, 0, 0]])
+
+    Sigma = np.array([[2*math.sqrt(3), 0, 0],
+                      [0, 2, 0],
+                      [0, 0, 0],
+                      [0, 0, 0]])
+
+    root6 = math.sqrt(6)
+    root3 = math.sqrt(3)
+    V= np.array([[2/root6, 0, -1/root3],
+                 [1/root6, -1/root2, 1/root3],
+                 [1/root6, 1/root2, 1/root3]])
+
+    VT = V.T
+    #print(VT)
+
+    b = np.array([[3],
+                 [2],
+                 [1],
+                 [0]])
+
+    #print(b)
+
+    A = U @ Sigma @ VT
+    
+
+    sol = np.linalg.lstsq(A, b)
+    print(f'Answer to A:')
+    print(sol[0])
+
+
+    print('Questions 6b:')
+
+    A0 = np.array([[2, 1],
+                  [2, 2]])
+
+    Q, R = np.linalg.qr(A0)
+    
+    A1 = R @ Q
+    print(A1)
+
+
+#Q6_2025()
+def f(x):
+    return (1+ math.cos(x))**2
+
+def to_x(u):
+    return -1+3*u
+
+def MC7():
+    lst = [0.02, 0.13, 0.34, 0.52, 0.59, 0.75, 0.78, 0.94]
+    lst = list(map(to_x, lst))
+    
+    N = len(lst)
+
+
+    b = 2
+    a = -1
+
+    return (b-a) * sum(list(map(f, lst)))/N
+
+#print(MC7())
+
+
+def MC_prac():
+
+    def f_(x):
+        return (1+math.sin(x))**2
+
+    def to_x_(u):
+        return 3*u
+
+    points = [0.05, 0.21, 0.37, 0.48, 0.63, 0.72, 0.86, 0.97]
+    points_x = list(map(to_x_, points))
+    N = len(points_x)
+    a, b = 0, 3
+
+    IA = ((b-a)/N)*sum(list(map(f_, points_x)))
+
+    return IA
+#print(MC_prac())
+
+
+def MC_int_np():
+    def f_(x):
+            return (1+np.sin(x))**2
+    
+    def to_x_(u):
+            return 3*u
+
+    points = np.array([0.05, 0.21, 0.37, 0.48, 0.63, 0.72, 0.86, 0.97])
+    points = to_x_(points)
+    N = len(points)
+
+    result_raw = (f_(points))
+    std = np.std(result_raw)
+    error = 1.96*std/(math.sqrt(N))
+    mean = np.mean(result_raw)
+
+    a, b = 0, 3
+
+    value = (b-a)*mean
+
+    print(f'MC int value: {value}. Error is: {error} assuming 95% confidece interval.')
+
+#MC_int_np()
+
+
+def Q8_2025(alfa, beta, a, b, N):
+    def inverse_k(alfa, beta, a, b):
+        y = np.random.uniform(0,1)
+        term_1 = 1 + (y-1)**(1/beta)
+        
+        return a+ (b-a)*(term_1**(1/alfa))
+
+    vals_g = np.random.normal(800, 50, N)
+
+    points_k = np.ones(N)
+    for i in range (N):
+        points_k [i] = inverse_k(alfa, beta, a, b)
+
+    def n(T):
+        return 0.2*(1-0.005*(T-25))
+
+    vals_k = n(points_k)
+
+    result = vals_k * vals_g
+    mean = np.mean(result)
+    std = np.std(result)
+    error = std*1.96/(math.sqrt(N))
+
+    return float(mean), float(error)
+
+
+#print(Q8_2025(0.5, 0.5, 20, 35, 1000))
+
+def energy_price(N):
+    return np.random.uniform(1, 2, N)
+
+def MCA(N, mu = 10, sigma = 1):
+    Material_cost = np.random.normal(mu, sigma, N)
+    energy_cost = np.array(energy_price(N))
+    labour_cost = 3*np.ones(N)
+    total = (Material_cost + energy_cost + labour_cost)
+    #print(total)
+    mean = np.mean(total)
+    std = np.std(total)
+    error = 1.96*std/(math.sqrt(N))
+
+    return float(mean), float(error)
+
+
+#print(MCA(1000))
+
+
+def reg():
+    A = np.array([[1, log(4)],
+                 [1, log(2.25)],
+                 [1, log(1.45)],
+                 [1, log(1)],
+                 [1, log(0.65)],
+                 [1, log(0.25)],
+                 [1, log(0.06)]])
+
+    b = np.log(np.array([[0.398],
+                      [0.298],
+                      [0.238],
+                      [0.198],
+                      [0.158],
+                      [0.098],
+                      [0.048]]))
+
+    Q, R = np.linalg.qr(A)
+
+    QT = Q.T
+
+    sol = np.linalg.solve(R, QT @ b)
+    k, n = sol
+    print(k, n)
+    k = math.e**(k)
+    print(k, n)
+
+
+#print(reg())
+
+
+def Interpret():
+    A = np.array([[1, 2],
+                  [1, 2],
+                  [1,0]])
+
+    b = np.array([[0],
+                  [1],
+                  [0]])
+
+    xhat = np.array([[0],
+                 [0.25]])
+
+
+    print('Question a:')
+    print('We have Axhat = bhat:')
+    bhat = A @ xhat
+    print(f'bhat = {b}')
+
+
+    y = b-bhat
+    print('The vector y is b-bhat:')
+    print(f'y = {y}')
+
+#Interpret()
+
+
+def Elsa():
+    freqs = [224, 171, 329, 120, 156] 
+
+    total_event = sum(freqs)
+    lst_of_probs = []
+    for i in range(len(freqs)):
+        lst_of_probs.append(freqs[i]/total_event)
+
+    interval = [lst_of_probs[0], sum(lst_of_probs[:2]), sum(lst_of_probs[:3]), sum(lst_of_probs[:4]), sum(lst_of_probs[:5])]    
+    print(interval)
+#Elsa()
+
+def Movie():
+    A = np.array([[1, 1],
+                  [1, 2],
+                  [1, 3]])
+
+    b = np.log (np.array([[135],
+                            [62], 
+                            [35]]))
+
+
+    sol =  np.linalg.lstsq(A, b)[0]
+    q0 = sol[0]
+    c = math.e**q0
+    q1 = a = sol[1]
+    def y(x):
+        return c * math.e**(x*a)
+
+    for i in range (1, 10):
+        print(f'week {i} earnings: {y(i)}')
+
+#Movie()
